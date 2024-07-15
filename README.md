@@ -4,3 +4,4 @@
 
 ## pcb焊点
 ![image](https://github.com/user-attachments/assets/1ca34fda-fe66-4d64-ad7a-d61fa5a78efb)
+![image](https://github.com/user-attachments/assets/a0f92794-b419-4646-8181-ac8f6706a4fb)
