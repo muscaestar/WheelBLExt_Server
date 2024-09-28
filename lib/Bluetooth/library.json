@@ -1,0 +1,8 @@
+{
+  "name": "Bluetooth",
+  "version": "1.0.0",
+  "description": "A collection of button classes for ESP32-C3",
+  "keywords": "button, toggle, hold, latch, range, esp32",
+  "frameworks": "arduino",
+  "platforms": "espressif32"
+}
