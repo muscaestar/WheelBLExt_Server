@@ -43,7 +43,7 @@ TODO
 ![SCH_G920_hub_ble_1-G920_HUB_BLE_1_2024-09-28](https://github.com/user-attachments/assets/157d40e3-0d4c-4321-aba3-216ff6d71133)
 
 ## PCB制版文件
-TODO
+[PCB制版文件ZIP](https://github.com/muscaestar/WheelBLExt_Server/releases/tag/pcb)
 
 ## PCB成品
 - 两片74HC4051模块
