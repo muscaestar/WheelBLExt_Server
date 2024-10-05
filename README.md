@@ -1,4 +1,6 @@
 # G920蓝牙Hub——服务端（基于ESP32C3）
+![bc1bde01afd9ea0e0ccc948b04b20c53_720](https://github.com/user-attachments/assets/863cbde5-1489-4d90-8605-644e404665c0)
+
 ## 概括
 - 以ESP32C3为核心
   - 外部信号输入
@@ -37,7 +39,8 @@
 - 没有上电时按键会互相干扰，估计下一版本（如果有）可以加入整流二极管
 
 ## 外壳设计
-TODO
+![3b01979397f13c168bcc44b8a7da396e](https://github.com/user-attachments/assets/4cc1a03a-5b17-4c29-9ec2-76fa989003eb)
+
 
 ## 原理图 Version20240922
 ![SCH_G920_hub_ble_1-G920_HUB_BLE_1_2024-09-28](https://github.com/user-attachments/assets/157d40e3-0d4c-4321-aba3-216ff6d71133)
