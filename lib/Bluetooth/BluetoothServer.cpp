@@ -33,3 +33,8 @@ void BluetoothServer::setCallbacks(BLECharacteristicCallbacks* callbacks) {
 uint8_t BluetoothServer::getState() {
     return _state;
 }
+
+void BluetoothServer::writeValue(uint8_t* value, size_t length) {
+    pCharacteristic->setValue(value, length);
+    pCharacteristic->notify(true);
+}

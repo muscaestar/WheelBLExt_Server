@@ -2,12 +2,13 @@
 #include <esp_sleep.h>
 #include <BluetoothServer.h>
 #include <LatchSwitch.h>
-#include <ToggleButton.h>
+#include <HoldButton.h> 
 
 #define CLEAR_PIN 5
 #define BLE_SLP_PIN 4
 #define TEST_BTN_PIN 21
-#define EN_PIN 3 
+#define EN_1_PIN 7
+#define EN_2_PIN 3
 #define S0_PIN 0
 #define S1_PIN 1
 #define S2_PIN 2
@@ -16,19 +17,19 @@
 #define SS2_PIN 20
 
 #define BTN_NULL 0x88
-#define BTN_RB   0x20
-#define BTN_MENU 0x30
-#define BTN_LB   0x00
-#define BTN_VIEW 0x10
+#define BTN_RB   0x28
+#define BTN_MENU 0x38
+#define BTN_LB   0x08
+#define BTN_VIEW 0x18
 
-#define BTN_B    0x07
-#define BTN_Y    0x06
-#define BTN_X    0x05
-#define BTN_A    0x04
-#define BTN_LEFT 0x03
-#define BTN_UP   0x02
-#define BTN_RIGT 0x01
-#define BTN_DOWN 0x00
+#define BTN_B    0x87
+#define BTN_Y    0x86
+#define BTN_X    0x85
+#define BTN_A    0x84
+#define BTN_LEFT 0x83
+#define BTN_UP   0x82
+#define BTN_RIGT 0x81
+#define BTN_DOWN 0x80
 
 #define BLE_NAME "WheelBLExt_Server"
 #define SERVICE_UUID        "854c4424-7dab-4ddc-8c35-5bebb61ef54f"
@@ -43,14 +44,16 @@ const uint8_t buttonValues[] = {
 };
 uint8_t currTestChannel = BTN_NULL;
 
-ToggleButton clearBtn(CLEAR_PIN);
+HoldButton clearBtn(CLEAR_PIN);
 LatchSwitch bleSwitch(BLE_SLP_PIN);
 BluetoothServer bluetoothServer(BLE_NAME, SERVICE_UUID, CHARACTERISTIC_UUID);
 
 void processTestBtn();
 void selectChannel(uint8_t channel);
 void enableMultiplexer();
+void enableMultiplexer(uint8_t pin);
 void disableMultiplexer();
+void disableMultiplexer(uint8_t pin);
 void blueLed(bool on);
 
 class MyCallbacks: public BLECharacteristicCallbacks {
@@ -71,7 +74,8 @@ void setup() {
   }
   // Set pin modes
   pinMode(TEST_BTN_PIN, INPUT_PULLDOWN); // Set TEST_BTN_PIN as input with internal pull-down resistor
-  pinMode(EN_PIN, OUTPUT);
+  pinMode(EN_1_PIN, OUTPUT);
+  pinMode(EN_2_PIN, OUTPUT);
   pinMode(S0_PIN, OUTPUT);
   pinMode(S1_PIN, OUTPUT);
   pinMode(S2_PIN, OUTPUT);
@@ -98,6 +102,7 @@ void setup() {
 void loop() {
     // 收集新一轮信号
     bleSwitch.update();
+    clearBtn.update();
 
     processTestBtn();
 
@@ -113,16 +118,26 @@ void loop() {
       esp_deep_sleep_start();
     }
     if (clearBtn.isPressed()) {
-      selectChannel(BTN_NULL);
+        selectChannel(BTN_NULL);
     }
 }
 
 void enableMultiplexer() {
-  digitalWrite(EN_PIN, LOW);
+  digitalWrite(EN_1_PIN, LOW);
+  digitalWrite(EN_2_PIN, LOW);
+}
+
+void enableMultiplexer(uint8_t pin) {
+  digitalWrite(pin, LOW);
 }
 
 void disableMultiplexer() {
-  digitalWrite(EN_PIN, HIGH);
+  digitalWrite(EN_1_PIN, HIGH);
+  digitalWrite(EN_2_PIN, HIGH);
+}
+
+void disableMultiplexer(uint8_t pin) {
+  digitalWrite(pin, HIGH);
 }
 
 void blueLed(bool on) {
@@ -148,11 +163,13 @@ void selectChannel(uint8_t channel) {
   }
   // for the channel value, first 4 bits are c1 channel number, last 4 bits are c2 channel number
   // Set the channel for the first multiplexer (c1)
+  bitRead(channel, 7) ? disableMultiplexer(EN_1_PIN) : enableMultiplexer(EN_1_PIN);
   digitalWrite(SS0_PIN, bitRead(channel, 4));
   digitalWrite(SS1_PIN, bitRead(channel, 5));
   digitalWrite(SS2_PIN, bitRead(channel, 6));
 
   // Set the channel for the second multiplexer (c2)
+  bitRead(channel, 3) ? disableMultiplexer(EN_2_PIN) : enableMultiplexer(EN_2_PIN);
   digitalWrite(S0_PIN, bitRead(channel, 0));
   digitalWrite(S1_PIN, bitRead(channel, 1));
   digitalWrite(S2_PIN, bitRead(channel, 2));

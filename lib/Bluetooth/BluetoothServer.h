@@ -17,6 +17,7 @@ public:
     void close();
     void setCallbacks(BLECharacteristicCallbacks* callbacks);
     uint8_t getState();
+    void writeValue(uint8_t* value, size_t length);
     
 private:
     const char* name;
